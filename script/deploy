@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+
+helm install iris helm-charts -f helm-charts/values.yaml
+
+LOAD_BALANCER_IP=$(doctl compute load-balancer list --format IP --no-header)
+doctl compute domain records create containerly.io --record-type "A" --record-name "iris" --record-data "$LOAD_BALANCER_IP" --record-ttl "30"

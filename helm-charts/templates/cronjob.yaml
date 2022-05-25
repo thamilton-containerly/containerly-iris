@@ -1,0 +1,30 @@
+{{- if .Values.cronjob.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "service.fullname" . }}-cronjob
+spec:
+  concurrencyPolicy: {{ .Values.cronjob.concurrencyPolicy }}
+  startingDeadlineSeconds: {{ .Values.cronjob.startingDeadlineSeconds }}
+  suspend: {{ .Values.cronjob.suspend }}
+  successfulJobsHistoryLimit: {{ .Values.cronjob.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.cronjob.failedJobsHistoryLimit }}
+  schedule: '{{ .Values.cronjob.schedule }}'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: {{ .Chart.Name }}-cronjob
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              command:
+                - "containerly-runtime"
+              args:
+                - "client"
+                - "--host={{ .Chart.Name }}.containerly.io"
+                - "--port=443"
+                - '--payload={"message": "eyJoZWxsbyI6ICJuaW5qYSJ9"}'
+                - "--insecure=false"
+          restartPolicy: Never
+{{- end }}

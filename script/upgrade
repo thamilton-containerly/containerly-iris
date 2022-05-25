@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -e
+
+helm upgrade iris helm-charts -f helm-charts/values.yaml
+
+# TODO - kubectl delete pod - to kick off new rebuilding pod with code changes.

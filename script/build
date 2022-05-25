@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -e
+
+docker build -t iris .
+docker tag iris registry.digitalocean.com/containerly/iris

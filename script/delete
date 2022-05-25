@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+
+helm delete iris
+
+RECORD_ID=$(doctl compute domain records list containerly.io --output json | jq '.[] | select(.name=="iris")' | jq -r '.id')
+doctl compute domain records delete containerly.io $RECORD_ID
